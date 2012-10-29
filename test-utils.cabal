@@ -1,0 +1,23 @@
+Name:           test-utils
+Version:        1.0
+Cabal-Version:  >= 1.14
+Author:         Richard Cobbe
+Synopsis:       Utility functions for writing HUnit tests
+Build-Type:     Simple
+License:        AllRightsReserved
+Copyright:      (c) 2012 Richard Cobbe
+Maintainer:     cobbe@ccs.neu.edu
+Stability:      alpha
+Category:       Test
+Description:    This package provides various helper functions for writing tests with HUnit.
+
+Library
+  Default-Language: Haskell2010
+  Ghc-options: -fwarn-incomplete-patterns
+  Build-Depends:
+    base == 4.5.*,
+    HUnit == 1.2.*,
+    parsec == 3.1.*,
+    QuickCheck == 2.4.*,
+    text == 0.11.*
+  Exposed-modules: Test.Utils
