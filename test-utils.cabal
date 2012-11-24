@@ -18,6 +18,6 @@ Library
     base == 4.5.*,
     HUnit == 1.2.*,
     parsec == 3.1.*,
-    QuickCheck == 2.4.*,
+    QuickCheck == 2.5.*,
     text == 0.11.*
   Exposed-modules: Test.Utils
