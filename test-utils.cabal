@@ -3,6 +3,7 @@ Version:        1.0
 Cabal-Version:  >= 1.14
 Author:         Richard Cobbe
 Synopsis:       Utility functions for writing HUnit tests
+Extra-source-files: HISTORY
 Build-Type:     Simple
 License:        AllRightsReserved
 Copyright:      (c) 2012 Richard Cobbe
@@ -13,11 +14,24 @@ Description:    This package provides various helper functions for writing tests
 
 Library
   Default-Language: Haskell2010
-  Ghc-options: -fwarn-incomplete-patterns
+  Ghc-Options: -fwarn-incomplete-patterns
   Build-Depends:
     base == 4.5.*,
     HUnit == 1.2.*,
     parsec == 3.1.*,
     QuickCheck == 2.5.*,
     text == 0.11.*
-  Exposed-modules: Test.Utils
+  Exposed-Modules: Test.Utils
+
+Test-Suite test-utils-tests
+  Main-Is: RunTests.hs
+  Type: exitcode-stdio-1.0
+  Default-Language: Haskell2010
+  Ghc-Options: -fwarn-incomplete-patterns
+  Build-Depends:
+    test-utils,
+    base == 4.5.*,
+    parsec == 3.1.*,
+    QuickCheck == 2.5.*,
+    HUnit == 1.2.*,
+    text == 0.11.*
