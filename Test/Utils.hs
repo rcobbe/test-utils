@@ -1,16 +1,20 @@
 -- | Defines various utility routines to assist in writing HUnit tests.
 module Test.Utils(assertParse,
                   assertParseFail,
+                  assertParseError,
                   parseRest,
                   parseContext,
                   makePos,
                   testQuickCheck)
        where
 
+import qualified Data.List as List
+import Control.Monad
 import Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as Text
 import Test.HUnit
 import Text.Parsec.Char
+import Text.Parsec.Error
 import Text.Parsec.Pos
 import Text.Parsec.Prim
 import Text.Parsec.Text.Lazy
@@ -63,7 +67,32 @@ assertParseFail parser input =
   case parse parser parserInputSource input of
     Left _ -> return ()
     Right val ->
-      assertFailure (concat ["Expected parse failure; got result: ", show val])
+      assertFailure ("Expected parse failure; got result: " ++ show val)
+
+-- | Asserts that the indicated 'Message' is part of the result of running a
+--   parser on the supplied input.
+assertParseError :: (Show a)
+                    => GenParser () a
+                    -- ^ The parser to be tested
+                    -> Text
+                    -- ^ The parser input
+                    -> Message
+                    -- ^ The expected error message
+                    -> Assertion
+assertParseError parser input expectedMsg =
+  case parse parser parserInputSource input of
+    Left err ->
+      do let actualMsgs = errorMessages err
+         unless (any (msgEq expectedMsg) actualMsgs)
+           (assertFailure
+            (concat ["Parse failed, but expected message\n  ",
+                     showMsg expectedMsg,
+                     "\n; got message",
+                     if (length actualMsgs == 1) then "" else "s",
+                     "\n  ",
+                     List.intercalate "\n  " (map showMsg actualMsgs)]))
+    Right val ->
+      assertFailure ("Expected parse failure; got result: " ++ show val)
 
 -- | Constructs a Parsec 'SourcePos' instance with the given line and column;
 --   the result's name matches that in positions created by 'assertParse'.
@@ -89,3 +118,18 @@ testQuickCheck args qcProp =
          (QC.NoExpectedFailure { }) ->
            assertFailure "No expected failure")
 
+-- | Equality comparison for 'Message' values that, unlike '(==)', actually
+--   compares the contents of the message string.
+msgEq :: Message -> Message -> Bool
+msgEq (SysUnExpect m1) (SysUnExpect m2) = m1 == m2
+msgEq (UnExpect m1) (UnExpect m2) = m1 == m2
+msgEq (Expect m1) (Expect m2) = m1 == m2
+msgEq (Message m1) (Message m2) = m1 == m1
+msgEq _ _ = False
+
+-- | Generates external representation of 'Message' for assertion messages.
+showMsg :: Message -> String
+showMsg (SysUnExpect msg) = "SysUnExpect: " ++ msg
+showMsg (UnExpect msg) = "UnExpect: " ++ msg
+showMsg (Expect msg) = "Expect: " ++ msg
+showMsg (Message msg) = "Message: " ++ msg
