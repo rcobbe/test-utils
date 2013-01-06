@@ -1,0 +1,6 @@
+Changes since 1.0:
+
+  - add Test.Utils.assertParseError, to ensure that a given message
+    appears in the error resuling from a particular parse attempt.
+
+  - add unit tests.
