@@ -1,5 +1,5 @@
 Name:           test-utils
-Version:        1.1
+Version:        1.2.0.0
 Cabal-Version:  >= 1.14
 Author:         Richard Cobbe
 Synopsis:       Utility functions for writing HUnit tests
@@ -16,10 +16,10 @@ Library
   Default-Language: Haskell2010
   Ghc-Options: -fwarn-incomplete-patterns
   Build-Depends:
-    base == 4.5.*,
+    base == 4.6.*,
     HUnit == 1.2.*,
     parsec == 3.1.*,
-    QuickCheck == 2.5.*,
+    QuickCheck == 2.6.*,
     text == 0.11.*
   Exposed-Modules: Test.Utils
 
@@ -30,8 +30,8 @@ Test-Suite test-utils-tests
   Ghc-Options: -fwarn-incomplete-patterns
   Build-Depends:
     test-utils,
-    base == 4.5.*,
+    base == 4.6.*,
     parsec == 3.1.*,
-    QuickCheck == 2.5.*,
+    QuickCheck == 2.6.*,
     HUnit == 1.2.*,
     text == 0.11.*

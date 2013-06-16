@@ -1,3 +1,7 @@
+New in 1.2:
+
+  - Updated package dependencies to work with Haskell Platform 2013-2.0.0.
+
 New in 1.1:
 
   - add Test.Utils.assertParseError, to ensure that a given message
