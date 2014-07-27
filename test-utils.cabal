@@ -16,7 +16,7 @@ Library
   Default-Language: Haskell2010
   Ghc-Options: -fwarn-incomplete-patterns
   Build-Depends:
-    base == 4.6.*,
+    base >= 4.7.0 && < 5,
     HUnit == 1.2.*,
     parsec == 3.1.*,
     QuickCheck == 2.6.*,
@@ -30,7 +30,7 @@ Test-Suite test-utils-tests
   Ghc-Options: -fwarn-incomplete-patterns
   Build-Depends:
     test-utils,
-    base == 4.6.*,
+    base >= 4.7.0 && < 5,
     parsec == 3.1.*,
     QuickCheck == 2.6.*,
     HUnit == 1.2.*,
