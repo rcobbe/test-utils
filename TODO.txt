@@ -1,0 +1,2 @@
+* Split parsec test utils out to separate module, to avoid pulling in
+  dependency on parsec unnecessarily.
