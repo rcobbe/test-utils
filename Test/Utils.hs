@@ -116,7 +116,9 @@ testQuickCheck args qcProp =
          (QC.Failure { }) ->
            assertFailure (QC.reason result)
          (QC.NoExpectedFailure { }) ->
-           assertFailure "No expected failure")
+           assertFailure "No expected failure"
+         (QC.InsufficientCoverage { }) ->
+           assertFailure "insufficient coverage")
 
 -- | Equality comparison for 'Message' values that, unlike '(==)', actually
 --   compares the contents of the message string.
