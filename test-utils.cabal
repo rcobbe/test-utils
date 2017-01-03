@@ -14,6 +14,7 @@ Description:    This package provides various helper functions for writing tests
 
 Library
   Default-Language: Haskell2010
+  hs-source-dirs: lib
   Ghc-Options: -fwarn-incomplete-patterns
   Build-Depends:
     base >= 4.7.0 && < 5,
@@ -24,6 +25,7 @@ Library
   Exposed-Modules: Test.Utils
 
 Test-Suite test-utils-tests
+  hs-source-dirs: test
   Main-Is: RunTests.hs
   Type: exitcode-stdio-1.0
   Default-Language: Haskell2010
