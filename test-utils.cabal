@@ -33,7 +33,7 @@ Library
   Ghc-Options: -fwarn-incomplete-patterns
   Build-Depends:
     base >= 4.7.0 && < 5,
-    HUnit == 1.5.*,
+    HUnit == 1.6.*,
     parsec == 3.1.*,
     QuickCheck == 2.9.*,
     text == 1.2.*
@@ -50,5 +50,5 @@ Test-Suite test-utils-tests
     base >= 4.7.0 && < 5,
     parsec == 3.1.*,
     QuickCheck == 2.9.*,
-    HUnit == 1.5.*,
+    HUnit == 1.6.*,
     text == 1.2.*
