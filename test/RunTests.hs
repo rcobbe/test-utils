@@ -17,6 +17,7 @@
 module Main(main) where
 
 import Control.Monad
+import qualified Control.Monad.Trans.Except as CMTE
 import System.Exit
 import Test.HUnit
 import Test.Utils
@@ -47,7 +48,19 @@ posTests =
    "assertParseFail" ~: assertParseFail (char 'x') "y",
 
    "assertParseError" ~:
-   assertParseError (char 'x') "y" (Expect "\"x\"")
+   assertParseError (char 'x') "y" (Expect "\"x\""),
+
+   "assertExcept" ~:
+   assertExcept "foo!" (throwStrComp "foo!"),
+
+   "assertExcept'" ~:
+   assertExcept' (assertEqual "" "foo!") (throwStrComp "foo!"),
+
+   "assertNoExcept" ~:
+   assertNoExcept 42 normalReturnComp,
+
+   "assertNoExcept'" ~:
+   assertNoExcept' (assertEqual "" 42) normalReturnComp
    ]
 
 -- Put the label on above, so we can count the number of expected failures.
@@ -60,4 +73,35 @@ negTests =
    "assertParseError: parse success" ~:
    assertParseError (char 'x') "x" (Message "foo"),
    "assertParseError: bad message" ~:
-   assertParseError (char 'x') "y" (Message "foo")]
+   assertParseError (char 'x') "y" (Message "foo"),
+
+   "assertExcept: normal return" ~:
+   assertExcept "foo!" normalReturnComp,
+
+   "assertExcept: exn mismatch" ~:
+   assertExcept "foo!" (throwStrComp "bar!"),
+
+   "assertExcept': normal return" ~:
+   assertExcept' (assertEqual "" "foo!") normalReturnComp,
+
+   "assertExcept': bad exn" ~:
+   assertExcept' (assertEqual "" "foo!") (throwStrComp "bar!"),
+
+   "assertNoExcept: throw" ~:
+   assertNoExcept 42 (throwStrComp "foo!"),
+
+   "assertNoExcept: bad result" ~:
+   assertNoExcept 43 normalReturnComp,
+
+   "assertNoExcept': throw" ~:
+   assertNoExcept' (assertEqual "" 42) (throwStrComp "foo!"),
+
+   "assertNoExcept': bad result" ~:
+   assertNoExcept' (assertEqual "" 43) normalReturnComp
+   ]
+
+normalReturnComp :: CMTE.Except String Integer
+normalReturnComp = return 42
+
+throwStrComp :: String -> CMTE.Except String Integer
+throwStrComp = CMTE.throwE

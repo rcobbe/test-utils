@@ -19,11 +19,18 @@ module Test.Utils(assertParse,
                   parseRest,
                   parseContext,
                   makePos,
-                  testQuickCheck)
+                  testQuickCheck,
+
+                  assertExcept,
+                  assertExcept',
+                  assertNoExcept,
+                  assertNoExcept')
        where
 
 import qualified Data.List as List
 import Control.Monad
+import Control.Monad.Trans.Except (Except)
+import qualified Control.Monad.Trans.Except as CMTE
 import Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as Text
 import Test.HUnit
@@ -149,3 +156,47 @@ showMsg (SysUnExpect msg) = "SysUnExpect: " ++ msg
 showMsg (UnExpect msg) = "UnExpect: " ++ msg
 showMsg (Expect msg) = "Expect: " ++ msg
 showMsg (Message msg) = "Message: " ++ msg
+
+-- | Asserts that a computation terminates with the supplied exception object.
+assertExcept :: (Eq e, Show e, Show a)
+             => e           -- ^ expected exception
+             -> Except e a  -- ^ actual computation
+             -> Assertion
+assertExcept expectedExn comp =
+  case CMTE.runExcept comp of
+    Left actualExn ->
+      when (expectedExn /= actualExn)
+        (assertFailure (concat ["expected exception ",
+                                show expectedExn,
+                                "; got exception ",
+                                show actualExn]))
+    Right val ->
+      assertFailure (concat ["expected exception ",
+                             show expectedExn,
+                             "; got actual result ",
+                             show val])
+
+-- | Asserts that a computation terminates with an exception that satisfies
+--   the given assertion
+assertExcept' :: (Show a) => (e -> Assertion) -> Except e a -> Assertion
+assertExcept' exnAssertion comp =
+  case CMTE.runExcept comp of
+    Left actualExn -> exnAssertion actualExn
+    Right val -> assertFailure ("expected exception; got result " ++ show val)
+
+-- | Asserts that a computation returns the indicated result rather than
+--   throwing.
+assertNoExcept :: (Show e, Eq b, Show b)
+               => b           -- ^ expected result
+               -> Except e b  -- ^ actual computation
+               -> Assertion
+assertNoExcept expectedVal comp =
+  assertNoExcept' (assertEqual "" expectedVal) comp
+
+-- | Asserts that a computation returns a normal result that satisfies the
+--   supplied assertion and does not throw.
+assertNoExcept' :: Show e => (a -> Assertion) -> Except e a -> Assertion
+assertNoExcept' resultAssertion comp =
+  case CMTE.runExcept comp of
+    Left actualExn -> assertFailure ("uncaught exception: " ++ show actualExn)
+    Right val -> resultAssertion val

@@ -1,3 +1,8 @@
+New in 1.6:
+
+  - Functions for working with Control.Monad.Trans.Except computations.
+    (Support for ExceptT is harder; I hope to add this later.)
+
 New in 1.5:
 
   - Licensed under Apache 2.0.
